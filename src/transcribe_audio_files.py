@@ -13,7 +13,7 @@ class Transcribe:
         self.pipe = pipeline(
         "automatic-speech-recognition",
         model="vasista22/whisper-telugu-base",
-        chunk_length_s=60)
+        chunk_length_s=60,device=0)
 
     def get_id(self):
         files = glob.glob(self.data_path +'/*.wav')
