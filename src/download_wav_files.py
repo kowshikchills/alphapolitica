@@ -31,6 +31,7 @@ class Audio_File_Download:
             df_add['audio_file_created'] = 0
             df_add['failed'] = 0
             df_status = df_status.append(df_add)
+            df_status = df_status.drop_duplicates(subset=['ids'], keep='first')
             df_status.to_csv(self.status_data_path ,index=False)
 
     def update_status(self,id_,status):
