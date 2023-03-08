@@ -22,13 +22,20 @@ class Transcribe:
 
     def transcribe(self):
         self.audio_url,id_ = self.get_id()
-        print(self.audio_url)
-        speech, org_sr = torchaudio.load(self.audio_url)
-        new_sample_rate = 16000
-        speech = torchaudio.functional.resample(speech, orig_freq=org_sr, new_freq=new_sample_rate)
-        sample = speech[0].numpy()
-        self.output = self.pipe(sample)
-        text_file = open(self.audio_url.replace('.wav','.txt'), "w")
-        n = text_file.write(self.output['text'])
-        os.remove(self.audio_url)
-        text_file.close()
+        try: 
+            print(self.audio_url)
+            speech, org_sr = torchaudio.load(self.audio_url)
+            new_sample_rate = 16000
+            speech = torchaudio.functional.resample(speech, orig_freq=org_sr, new_freq=new_sample_rate)
+            sample = speech[0].numpy()
+            self.output = self.pipe(sample)
+            text_file = open(self.audio_url.replace('.wav','.txt'), "w")
+            n = text_file.write(self.output['text'])
+            os.remove(self.audio_url)
+            text_file.close()
+        except:
+            print(self.audio_url,'failed')
+            text_file = open(self.audio_url.replace('.wav','.::failed.txt'), "w")
+            n = text_file.write(self.output['text'])
+            os.remove(self.audio_url)
+            text_file.close()
