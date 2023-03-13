@@ -51,21 +51,19 @@ class Audio_File_Download:
         df = df[df.failed == 0]
         return(df.ids.values[0])
     
-    def create_audio_file(self):
+    def create_video_file(self):
         self.id_ = self.get_id()
         self.link = 'https://www.youtube.com/watch?v=' + self.id_
         mp4_file_download = self.id_+'.mp4'
         try:
             self.yt = YouTube(self.link)
             stream_ = self.yt.streams.filter(progressive="True").asc()[1]
-            stream_.download(filename=mp4_file_download,output_path='ids_data')
-            #mpy_conf.change_settings({'FFMPEG_BINARY': '/opt/homebrew/Cellar/ffmpeg'})
-            my_clip = mp.VideoFileClip('video_data/' + mp4_file_download)
+            stream_.download(filename=mp4_file_download,output_path='video_data')
             self.update_status(self.id_,status = 'created')
         except:
             self.update_status(self.id_,status = 'failed')
 
     def reset(self):
-        to_delete = glob.glob('video_data/*.mp4') +['ids_data/video_status.csv']
+        to_delete = glob.glob('video_data/*.mp4') +['video_data/video_status.csv']
         for fil in to_delete:
             os.remove(fil)
