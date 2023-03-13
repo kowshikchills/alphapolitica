@@ -22,6 +22,7 @@ class Audio_File_Download:
             df_ids_input = pd.read_csv(self.ids_input_data_path)
             df_ids_input['video_file_created'] = 0
             df_ids_input['failed'] = 0
+            df_ids_input = df_ids_input.drop_duplicates('ids')
             df_ids_input.to_csv(self.status_data_path ,index=False)
         else:
             df_status = pd.read_csv(self.status_data_path)

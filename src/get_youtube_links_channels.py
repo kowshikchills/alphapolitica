@@ -6,13 +6,11 @@ import pandas as pd
 
 #TODO COMPLETE THE CODE
 
-
 class Get_Youtube_Links:
 
     def __init__(self, API_KEY = "AIzaSyBTj6qYk3Ms82gou0EzdAaguvF6dbZKLYo",     
                 channel_id_file = 'channels_ids.csv',
                 data_loc = 'data_youtube/' ):
-
         self.API_KEY = API_KEY
         self.channel_id_file = channel_id_file
         self.data_loc = data_loc
@@ -35,7 +33,6 @@ class Get_Youtube_Links:
     def add_channel_name(self, name, channel_id):
         pass
 
-        
     def download_videos_link(self):
         self.df_channel = pd.read_csv(self.channel_id_file)
         names = self.df_channel['name']
