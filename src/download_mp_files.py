@@ -66,4 +66,5 @@ class Audio_File_Download:
     def reset(self):
         to_delete = glob.glob('video_data/*.mp4') +['video_data/video_status.csv']
         for fil in to_delete:
+            
             os.remove(fil)
