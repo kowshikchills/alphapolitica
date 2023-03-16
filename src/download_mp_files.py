@@ -13,8 +13,8 @@ import glob
 
 class Video_File_Download:
     def __init__(self):
-        self.ids_input_data_path = 'video_data/ids_input.csv'
-        self.status_data_path = 'video_data/ids_status.csv'
+        self.ids_input_data_path = 'video_data/video_input.csv'
+        self.status_data_path = 'video_data/video_status.csv'
 
     def update_status_file(self,file=None):
 
@@ -26,10 +26,10 @@ class Video_File_Download:
             df_ids_input.to_csv(self.status_data_path ,index=False)
         else:
             df_status = pd.read_csv(self.status_data_path)
-            df_ids_input = pd.read_csv('video_data/ids_input.csv')
+            df_ids_input = pd.read_csv('video_data/video_input.csv')
             to_add_ids = set(df_status['ids']) -  set(df_ids_input['ids'])
             df_add = pd.DataFrame(to_add_ids, columns=['ids'])
-            df_add['audio_file_created'] = 0
+            df_add['video_file_created'] = 0
             df_add['failed'] = 0
             df_status = df_status.append(df_add)
             df_status = df_status.drop_duplicates(subset=['ids'], keep='first')
@@ -47,7 +47,7 @@ class Video_File_Download:
 
     def get_id(self):
         df_status = pd.read_csv(self.status_data_path )
-        df = df_status[df_status.audio_file_created == 0]
+        df = df_status[df_status.video_file_created == 0]
         df = df[df.failed == 0]
         return(df.ids.values[0])
     
