@@ -9,11 +9,9 @@ import pandas as pd
 class Get_Youtube_Links:
 
     def __init__(self, API_KEY = "AIzaSyBTj6qYk3Ms82gou0EzdAaguvF6dbZKLYo",     
-                channel_id_file = 'channels_ids.csv',
-                data_loc = 'data_youtube/' ):
+                channel_id_file = 'channels_ids.csv'):
         self.API_KEY = API_KEY
         self.channel_id_file = channel_id_file
-        self.data_loc = data_loc
         
     def save_video(self, channel_id, name, count):
 
@@ -27,6 +25,7 @@ class Get_Youtube_Links:
             time.sleep(0.01)
             video_id = item.contentDetails.videoId
             video_ids.append(video_id)
+        
         with open(self.data_loc+name+'.pkl', 'wb') as f:
             pickle.dump(video_ids, f)
 

@@ -11,7 +11,7 @@ import moviepy.editor as mp
 import os
 import glob
 
-class Audio_File_Download:
+class Video_File_Download:
     def __init__(self):
         self.ids_input_data_path = 'video_data/ids_input.csv'
         self.status_data_path = 'video_data/ids_status.csv'
@@ -66,5 +66,4 @@ class Audio_File_Download:
     def reset(self):
         to_delete = glob.glob('video_data/*.mp4') +['video_data/video_status.csv']
         for fil in to_delete:
-            #delete file
             os.remove(fil)
