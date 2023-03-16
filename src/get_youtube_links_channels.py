@@ -10,10 +10,12 @@ class Get_Youtube_Links:
 
     def __init__(self, API_KEY = "AIzaSyBTj6qYk3Ms82gou0EzdAaguvF6dbZKLYo",     
                 channel_id_file = 'channels_ids.csv'):
+
         self.API_KEY = API_KEY
         self.channel_id_file = channel_id_file
+        self.link_channel_dict = {}
         
-    def save_video(self, channel_id, name, count):
+    def save_videos(self, channel_id, name, count):
 
         api = pyyoutube.Api(api_key=self.API_KEY)
         channel_info = api.get_channel_info(channel_id = channel_id)
@@ -25,18 +27,19 @@ class Get_Youtube_Links:
             time.sleep(0.01)
             video_id = item.contentDetails.videoId
             video_ids.append(video_id)
-        
-        with open(self.data_loc+name+'.pkl', 'wb') as f:
-            pickle.dump(video_ids, f)
+        self.link_channel_dict[name] = video_ids
 
     def add_channel_name(self, name, channel_id):
         pass
 
-    def download_videos_link(self):
+    def download_videos_link(self, count):
+        
         self.df_channel = pd.read_csv(self.channel_id_file)
         names = self.df_channel['name']
         channels_ids = self.df_channel['channel_id']
-        
+        for i in range(len(names)):
+            self.save_videos(channels_ids[i], names[i], count)
+        return(self.link_channel_dict)
 
 ''' 
 import pandas as pd
