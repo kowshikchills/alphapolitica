@@ -50,7 +50,5 @@ class CreateInputFile:
         df_tagged_translated[['ids']].to_csv('ids_data/ids_input.csv',index=None)
         
 
-        
-
 
 
