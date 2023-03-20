@@ -10,6 +10,7 @@ import moviepy.config as mpy_conf
 import moviepy.editor as mp
 import os
 import glob
+import cv2
 
 class Video_File_Download:
     def __init__(self):
@@ -37,6 +38,7 @@ class Video_File_Download:
 
     def update_status(self,id_,status):
         if status =='created':
+            print(id_)
             df_status = pd.read_csv(self.status_data_path)
             df_status.at[df_status.index[df_status.ids == id_].tolist()[0],'video_file_created'] =1
             df_status.to_csv(self.status_data_path ,index=False)
@@ -59,7 +61,27 @@ class Video_File_Download:
             self.yt = YouTube(self.link)
             stream_ = self.yt.streams.filter(progressive="True").asc()[1]
             stream_.download(filename=mp4_file_download,output_path='video_data')
+            file = 'video_data/'+ mp4_file_download
+            cap = cv2.VideoCapture(file)
+            path = file.split('.mp4')[0]
+            os.mkdir(path)
+            fps = int(cap.get(cv2.CAP_PROP_FPS))
+            save_interval = 5
+            frame_count = 0
+            while cap.isOpened():
+                ret, frame = cap.read()
+                if ret:
+                    frame_count += 1
+                    if frame_count % (fps * save_interval) == 1:
+                        cv2.imwrite(path + '/'+ str(frame_count) +'.png',frame)
+                else:
+                    break
+            cap.release()
+            cv2.destroyAllWindows()
+
             self.update_status(self.id_,status = 'created')
+            
+            os.remove(file)
         except:
             self.update_status(self.id_,status = 'failed')
 

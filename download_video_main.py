@@ -1,4 +1,4 @@
-from src.download_wav_files import Video_File_Download
+from src.download_mp_files import Video_File_Download
 import os
 import time
 
@@ -9,9 +9,8 @@ if not os.path.isfile('video_data/video_status.csv'):
 def main():
     while True:
         try:
-            VFD.create_audio_file()
-            time.sleep(5)
+            VFD.create_video_file()
         except:
-            print('Failed')
+            print('failed')
 
 main()
