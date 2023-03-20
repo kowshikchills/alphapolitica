@@ -18,9 +18,7 @@ class CreateFaces:
     def create_failed_file(self):
         pass
 
-
     def get_screenshots(self, file, id):
-
         try:
             cap = cv2.VideoCapture(file)
             path = file.split('.mp4')[0]
@@ -39,23 +37,11 @@ class CreateFaces:
             cap.release()
             cv2.destroyAllWindows()
         except:
-            pass
-    def transcribe(self):
-        self.audio_url,id_ = self.get_id()
-        try: 
-            print(self.audio_url)
-            speech, org_sr = torchaudio.load(self.audio_url)
-            new_sample_rate = 16000
-            speech = torchaudio.functional.resample(speech, orig_freq=org_sr, new_freq=new_sample_rate)
-            sample = speech[0].numpy()
-            self.output = self.pipe(sample)
-            text_file = open(self.audio_url.replace('.wav','.txt'), "w")
-            n = text_file.write(self.output['text'])
-            os.remove(self.audio_url)
-            text_file.close()
-        except:
-            print(self.audio_url,'failed')
-            text_file = open(self.audio_url.replace('.wav','.::failed.txt'), "w")
-            n = text_file.write(self.output['text'])
-            os.remove(self.audio_url)
-            text_file.close()
+            print(id,'failed')
+
+    def create_screenshots(self):
+        self.video_url,id_ = self.get_video()
+        self.get_screenshots(self, self.video_url, id_)
+        print(self.video_url)
+        os.remove(self.video_url)
+        
