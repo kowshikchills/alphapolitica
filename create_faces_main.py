@@ -5,7 +5,7 @@ CF = CreateFaces()
 def main():
     while True:
         try:
-            CF.create_screenshots()
+            CF.create_faces()
         except:
             print('Failed')
 main()
