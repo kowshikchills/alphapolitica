@@ -27,7 +27,7 @@ class CreateFaces:
             face_pil_images.append(pil_image)
         return(face_pil_images)
     
-    def get_all_files_from_folder(self):
+    def get_all_faces_from_folder(self):
         self.folder, id_ = self.get_video_file()
         self.png_files = glob.glob(self.folder + '/*png')
         for img_loc in self.png_files:

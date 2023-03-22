@@ -5,7 +5,7 @@ CF = CreateFaces()
 def main():
     while True:
         try:
-            CF.create_faces()
+            CF.get_all_faces_from_folder()
         except:
             print('Failed')
 main()
