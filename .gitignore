@@ -19,3 +19,4 @@ video_data/*.wav
 video_data/*.txt
 video_data/*.mp4
 video_data/*
+faces/*png
