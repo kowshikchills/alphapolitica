@@ -29,6 +29,7 @@ class CreateFaces:
     
     def get_all_faces_from_folder(self):
         self.folder, id_ = self.get_video_file()
+        print(id_)
         self.png_files = glob.glob(self.folder + '/*png')
         for img_loc in self.png_files:
             frame = img_loc.split('/')[-1].split('.png')[0]
@@ -37,7 +38,8 @@ class CreateFaces:
                 for i in range(len(self.face_pil_images)):
                     pil_image = self.face_pil_images[i]
                     pil_image.save(self.faces_path + '/'+id_+'_'+frame+ '_face_'+ str(i) +'.png')
-        os.remove(self.folder)
+        import shutil
+        shutil.rmtree(self.folder) 
 
     
 

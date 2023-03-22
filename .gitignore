@@ -15,8 +15,12 @@ ids_data/*.mp4
 scrapetube/scrapetube/__pycache__
 src/__pycache__
 data_analysis.ipynb
+
+video_data/*
+!video_data/.video_input.csv
+!video_data/.video_status.csv
 video_data/*.wav
 video_data/*.txt
 video_data/*.mp4
-video_data/*
+
 faces/*png
