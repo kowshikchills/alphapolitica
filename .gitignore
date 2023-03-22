@@ -24,3 +24,4 @@ video_data/*.txt
 video_data/*.mp4
 
 faces/*png
+!faces/.gitkeep
