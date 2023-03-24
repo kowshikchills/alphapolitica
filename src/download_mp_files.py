@@ -11,6 +11,7 @@ import moviepy.editor as mp
 import os
 import glob
 import cv2
+from multiprocessing import Pool
 
 class Video_File_Download:
     def __init__(self):
@@ -52,6 +53,18 @@ class Video_File_Download:
         df = df_status[df_status.video_file_created == 0]
         df = df[df.failed == 0]
         return(df.ids.values[0])
+
+    def get_id_n(self,n):
+        df_status = pd.read_csv(self.status_data_path )
+        df = df_status[df_status.video_file_created == 0]
+        df = df[df.failed == 0]
+        return(df.ids.values[:n])
+
+    def create_video_files_multi(self, n):
+        self.id_n = self.get_id_n(n)
+        with Pool(5) as p:
+            p.map(self.create_video_file_id, list(self.id_n))
+
     
     def create_video_file(self):
         self.id_ = self.get_id()
@@ -84,6 +97,39 @@ class Video_File_Download:
             os.remove(file)
         except:
             self.update_status(self.id_,status = 'failed')
+
+    def create_video_file_id(self, id_):
+        self.id_ = id_
+        self.link = 'https://www.youtube.com/watch?v=' + self.id_
+        mp4_file_download = self.id_+'.mp4'
+        try:
+            self.yt = YouTube(self.link)
+            stream_ = self.yt.streams.filter(progressive="True").asc()[1]
+            stream_.download(filename=mp4_file_download,output_path='video_data')
+            file = 'video_data/'+ mp4_file_download
+            cap = cv2.VideoCapture(file)
+            path = file.split('.mp4')[0]
+            os.mkdir(path)
+            fps = int(cap.get(cv2.CAP_PROP_FPS))
+            save_interval = 5
+            frame_count = 0
+            while cap.isOpened():
+                ret, frame = cap.read()
+                if ret:
+                    frame_count += 1
+                    if frame_count % (fps * save_interval) == 1:
+                        cv2.imwrite(path + '/'+ str(frame_count) +'.png',frame)
+                else:
+                    break
+            cap.release()
+            cv2.destroyAllWindows()
+
+            self.update_status(self.id_,status = 'created')
+            
+            os.remove(file)
+        except:
+            self.update_status(self.id_,status = 'failed')
+
 
     def reset(self):
         to_delete = glob.glob('video_data/*.mp4') +['video_data/video_status.csv']
