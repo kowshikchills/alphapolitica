@@ -7,5 +7,10 @@ if not os.path.isfile('video_data/video_status.csv'):
     VFD.update_status_file()
 
 def main():
-        VFD.create_video_files_multi(5)
+    while True:
+        try:
+            VFD.create_video_files_multi(10)
+        except:
+            print('failed')
+
 main()
