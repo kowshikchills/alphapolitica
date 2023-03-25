@@ -48,7 +48,7 @@ class Video_File_Download:
             df_status.at[df_status.index[df_status.ids == id_].tolist()[0],'failed'] =1
             df_status.to_csv(self.status_data_path ,index=False)
 
-    def update_status_bulk(self,id_,status_bulk):
+    def update_status_bulk(self,status_bulk):
         for i in status_bulk.keys():
             if status_bulk[i] == 1:
                 self.update_status(i, status = 'created')
