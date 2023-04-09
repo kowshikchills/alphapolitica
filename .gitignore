@@ -26,3 +26,4 @@ video_data/*.mp4
 faces/*png
 !faces/.gitkeep
 known_faces/*png
+!known_faces/.gitkeep
