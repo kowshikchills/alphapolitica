@@ -11,12 +11,14 @@ import moviepy.editor as mp
 import os
 import glob
 import cv2
+from yt_dlp import YoutubeDL
 from multiprocessing import Pool, Manager
 
 class Video_File_Download:
     def __init__(self):
         self.ids_input_data_path = 'video_data/video_input.csv'
         self.status_data_path = 'video_data/video_status.csv'
+        self.down_pack = 'ydl'
 
     def update_status_file(self,file=None):
 
@@ -75,17 +77,48 @@ class Video_File_Download:
             p.map(self.create_video_file_id, [[i, update_dict] for i in  list(self.id_n)])
         self.update_status_bulk(update_dict)
 
+    def download_video(self, link, id, mp4_file_download):
+        try:
+            youtube_dl_options = {
+                "outtmpl": mp4_file_download,
+                'extract_audio': False,
+                'format':'133'
+            }
+            with YoutubeDL(youtube_dl_options) as ydl:
+                return ydl.download([link])
+        except:
+            try:
+                youtube_dl_options = {
+                    "outtmpl": mp4_file_download,
+                    'extract_audio': False,
+                    'format':'134'
+                }
+                with YoutubeDL(youtube_dl_options) as ydl:
+                    return ydl.download([link])
+            except:
+                youtube_dl_options = {
+                    "outtmpl": mp4_file_download,
+                    'extract_audio': False,
+                    'format':'135'
+                }
+                with YoutubeDL(youtube_dl_options) as ydl:
+                    return ydl.download([link])
+
     def create_video_file_id(self, input):
         self.id_ = input[0]
         update_dict_ = input[1]
 
         self.link = 'https://www.youtube.com/watch?v=' + self.id_
         mp4_file_download = self.id_+'.mp4'
+        file = 'video_data/'+ mp4_file_download
         try:
-            self.yt = YouTube(self.link)
-            stream_ = self.yt.streams.filter(progressive="True").asc()[1]
-            stream_.download(filename=mp4_file_download,output_path='video_data')
-            file = 'video_data/'+ mp4_file_download
+            if self.down_pack == 'yttube':
+                self.yt = YouTube(self.link)
+                stream_ = self.yt.streams.filter(progressive="True").asc()[1]
+                stream_.download(filename=mp4_file_download,output_path='video_data')
+            else:
+                self.download_video(self.link,self.id_,file )
+        
             cap = cv2.VideoCapture(file)
             path = file.split('.mp4')[0]
             os.mkdir(path)
@@ -107,7 +140,6 @@ class Video_File_Download:
             os.remove(file)
         except:
             update_dict_[self.id_] = 0
-
     
     def create_video_file(self):
         self.id_ = self.get_id()
