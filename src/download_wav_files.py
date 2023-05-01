@@ -57,7 +57,7 @@ class Audio_File_Download:
         try:
             youtube_dl_options = {
                 "outtmpl": mp4_file_download,
-                'extract_audio': False,
+                'extract_audio': True,
                 'format':'133'
             }
             with YoutubeDL(youtube_dl_options) as ydl:
@@ -66,7 +66,7 @@ class Audio_File_Download:
             try:
                 youtube_dl_options = {
                     "outtmpl": mp4_file_download,
-                    'extract_audio': False,
+                    'extract_audio': True,
                     'format':'134'
                 }
                 with YoutubeDL(youtube_dl_options) as ydl:
@@ -74,7 +74,7 @@ class Audio_File_Download:
             except:
                 youtube_dl_options = {
                     "outtmpl": mp4_file_download,
-                    'extract_audio': False,
+                    'extract_audio': True,
                     'format':'135'
                 }
                 with YoutubeDL(youtube_dl_options) as ydl:
