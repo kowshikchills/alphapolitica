@@ -10,11 +10,13 @@ import moviepy.config as mpy_conf
 import moviepy.editor as mp
 import os
 import glob
+from yt_dlp import YoutubeDL
 
 class Audio_File_Download:
     def __init__(self):
         self.ids_input_data_path = 'ids_data/ids_input.csv'
         self.status_data_path = 'ids_data/ids_status.csv'
+        self.ext_pack = 'yt_dlp'
 
     def update_status_file(self,file=None):
 
@@ -57,13 +59,27 @@ class Audio_File_Download:
         mp4_file_download = self.id_+'.mp4'
         wav_file_download = self.id_+'.wav'
         try:
-            self.yt = YouTube(self.link)
-            stream_ = self.yt.streams.filter(progressive="True").asc()[1]
-            stream_.download(filename=mp4_file_download,output_path='ids_data')
-            #mpy_conf.change_settings({'FFMPEG_BINARY': '/opt/homebrew/Cellar/ffmpeg'})
-            my_clip = mp.VideoFileClip('ids_data/' + mp4_file_download)
-            my_clip.audio.write_audiofile('ids_data/' + wav_file_download)
-            os.remove('ids_data/' + mp4_file_download)
+            if self.ext_pack == 'pytube':
+                self.yt = YouTube(self.link)
+                stream_ = self.yt.streams.filter(progressive="True").asc()[1]
+                stream_.download(filename=mp4_file_download,output_path='ids_data')
+                #mpy_conf.change_settings({'FFMPEG_BINARY': '/opt/homebrew/Cellar/ffmpeg'})
+                my_clip = mp.VideoFileClip('ids_data/' + mp4_file_download)
+                my_clip.audio.write_audiofile('ids_data/' + wav_file_download)
+                os.remove('ids_data/' + mp4_file_download)
+                self.update_status(self.id_,status = 'created')
+            else:
+                ydl_opts = {
+                    'format': 'bestaudio/best',
+                    'outtmpl': 'ids_data/'+self.id_,
+                    'postprocessors': [{
+                        'key': 'FFmpegExtractAudio',
+                        'preferredcodec': 'wav',
+                    }],
+                }
+                with YoutubeDL(ydl_opts) as ydl:
+                    ydl.download([self.link])
+
             self.update_status(self.id_,status = 'created')
         except:
             self.update_status(self.id_,status = 'failed')
