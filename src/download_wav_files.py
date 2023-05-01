@@ -52,6 +52,34 @@ class Audio_File_Download:
         df = df_status[df_status.audio_file_created == 0]
         df = df[df.failed == 0]
         return(df.ids.values[0])
+
+    def download_video(self, link, id, mp4_file_download):
+        try:
+            youtube_dl_options = {
+                "outtmpl": mp4_file_download,
+                'extract_audio': False,
+                'format':'133'
+            }
+            with YoutubeDL(youtube_dl_options) as ydl:
+                return ydl.download([link])
+        except:
+            try:
+                youtube_dl_options = {
+                    "outtmpl": mp4_file_download,
+                    'extract_audio': False,
+                    'format':'134'
+                }
+                with YoutubeDL(youtube_dl_options) as ydl:
+                    return ydl.download([link])
+            except:
+                youtube_dl_options = {
+                    "outtmpl": mp4_file_download,
+                    'extract_audio': False,
+                    'format':'135'
+                }
+                with YoutubeDL(youtube_dl_options) as ydl:
+                    return ydl.download([link])
+
     
     def create_audio_file(self):
         self.id_ = self.get_id()
@@ -69,18 +97,12 @@ class Audio_File_Download:
                 os.remove('ids_data/' + mp4_file_download)
                 self.update_status(self.id_,status = 'created')
             else:
-                ydl_opts = {
-                    'format': 'bestaudio/best',
-                    'outtmpl': 'ids_data/'+self.id_,
-                    'postprocessors': [{
-                        'key': 'FFmpegExtractAudio',
-                        'preferredcodec': 'wav',
-                    }],
-                }
-                with YoutubeDL(ydl_opts) as ydl:
-                    ydl.download([self.link])
-
-            self.update_status(self.id_,status = 'created')
+                mp4_download_path = 'ids_data/' + mp4_file_download
+                self.download_video(self.link, self.id_, mp4_download_path)
+                my_clip = mp.VideoFileClip('ids_data/' + mp4_file_download)
+                my_clip.audio.write_audiofile('ids_data/' + wav_file_download)
+                os.remove('ids_data/' + mp4_file_download)
+                self.update_status(self.id_,status = 'created')
         except:
             self.update_status(self.id_,status = 'failed')
 
