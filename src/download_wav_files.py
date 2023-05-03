@@ -70,16 +70,16 @@ class Audio_File_Download:
                 self.update_status(self.id_,status = 'created')
             else:
                 ydl_opts = {
-                    'format': 'bestaudio/best',
+                    'format': 'worstvideo+bestaudio',
                     'outtmpl': 'ids_data/'+self.id_,
-                    'postprocessors': [{
-                        'key': 'FFmpegExtractAudio',
-                        'preferredcodec': 'wav',
-                    }],
                 }
                 with YoutubeDL(ydl_opts) as ydl:
                     ydl.download([self.link])
-
+                mkv_file_download = self.id_+'.mkv'
+                my_clip = mp.VideoFileClip('ids_data/' + mkv_file_download)
+                my_clip.audio.write_audiofile('ids_data/' + wav_file_download)
+                os.remove('ids_data/' + mkv_file_download)
+                self.update_status(self.id_,status = 'created')
             self.update_status(self.id_,status = 'created')
         except:
             self.update_status(self.id_,status = 'failed')
