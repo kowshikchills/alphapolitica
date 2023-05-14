@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(0, '..')
+
 import glob
 from src.face_search_utils import *
 import json
